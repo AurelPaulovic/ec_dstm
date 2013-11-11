@@ -1,7 +1,7 @@
 package com.aurelpaulovic.fiit.ec_dstm.net
 
+import commands._
 import org.{zeromq => zmq}
-import RichContext.context2RichContext
 import concurrent.future
 import concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -9,9 +9,17 @@ import scala.concurrent.Await
 import scala.concurrent.duration.Duration
 
 class Connection (private val context: zmq.ZMQ.Context, private val addr: String) {
+    this: commands.Commander =>
+    
     private[this] val commanderAddr = "inproc://ecdstm.connection.commander." + context.getUniqueInprocSockId
     private[this] var commander: zmq.ZMQ.Socket = null
     private[this] var connectionWorker: Future[Boolean] = null
+    
+    private class ConnectionWorker (private val context: zmq.ZMQ.Context, private val addr: String) {
+        private[this] val gate = context.socket(zmq.ZMQ.REP)
+        private[this] val follower = context.socket(zmq.ZMQ.PAIR)
+        private[this] val poller = new zmq.ZMQ.Poller(2)
+    }
     
     def start { 
         if(connectionWorker == null && commander == null) {
@@ -34,7 +42,7 @@ class Connection (private val context: zmq.ZMQ.Context, private val addr: String
 		    	    poller.poll()
 		    	    
 		    	    if(poller.pollin(0)) { // command
-		    	        var msg = follower.recvStr
+		    	        var msg = follower.recvStr(defaultCharset)
 		    	        println(s"follower got: $msg")
 		    	        
 		    	        if(msg.equals("stop")) {
@@ -44,7 +52,7 @@ class Connection (private val context: zmq.ZMQ.Context, private val addr: String
 		    	    }
 		    	    
 		    	    if(poller.pollin(1)) { // gate
-		    	        var msg = gate.recvStr
+		    	        var msg = gate.recvStr(defaultCharset)
 		    	        println(s"gate got: $msg")
 		    	        
 		    	        gate.send("got your msg")

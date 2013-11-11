@@ -8,9 +8,7 @@ class RichContext (private val c: Context) {
 
 object RichContext {
     private[this] var contextsIds: Map[Context, Int] = Map() 
-    
-    implicit def context2RichContext(c: Context) = new RichContext(c)
-    
+        
     protected def getUniqueIdForContext(c: Context) = {
         this.synchronized {
             var id = contextsIds.getOrElse(c, 0) + 1
@@ -19,3 +17,4 @@ object RichContext {
         }
     }
 }
+
