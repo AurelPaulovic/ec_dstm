@@ -40,10 +40,20 @@ case class C () extends Command {
   }
 }
 
+abstract class Identity
+case class SIdentity (name: String) extends Identity
+case class PIdentity (name: String) extends Identity
+
+abstract class Message
+case class RegisterMessage(what: Identity) extends Message
+case class TextMessage (what: String) extends Message
+
 object test {
     println("xaxs")
 
     var x = new MyClass() with Commandable {
       val commands = List(A())
     }
+    
+    
 }

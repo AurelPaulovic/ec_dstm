@@ -1,5 +1,7 @@
 import org.{zeromq => zmq}
 import com.aurelpaulovic.fiit.ec_dstm._
+import scala.pickling._
+import json._
 
 val c = zmq.ZMQ.context(1)
 val ds = new net.DiscoveryService("Discovery") with net.ReplyConnection {

@@ -6,9 +6,20 @@ import json._
 
 sealed abstract class Message
 
-case class DSRegisterMessage (what: net.identity.Identity)
+case class ACK () extends Message
 
+case class Stop () extends Message
+
+case class UnsupportedMessage (msg: Message) extends Message
+
+case class DSRegisterMessage (what: net.identity.Identity) extends Message
+
+case class DSGetRegisteredPublishers () extends Message
+
+case class DSRegisteredPublishers (publishers: Map[String, net.identity.Publisher]) extends Message
 
 object Message {
-    implicit def message2String(m: Message) = m.pickle
+    implicit def message2String(m: Message): String = m.pickle.value
+    
+    implicit def string2Message(s: String) = s.unpickle[Message]
 }

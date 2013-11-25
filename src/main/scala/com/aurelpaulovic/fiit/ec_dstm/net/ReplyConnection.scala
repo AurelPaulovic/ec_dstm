@@ -17,9 +17,9 @@ trait ReplyConnection extends Connection {
     
     def getAddr = addr
 
-    protected def followerMessageResolve(msg: String): Boolean
+    protected def followerMessageResolve(msg: message.Message): Boolean
     
-    protected def gateMessageResolve(msg: String): String
+    protected def gateMessageResolve(msg: message.Message): message.Message
 
     def workerLoop(follower: zmq.ZMQ.Socket, gate: zmq.ZMQ.Socket) {
         val poller = new zmq.ZMQ.Poller(2)

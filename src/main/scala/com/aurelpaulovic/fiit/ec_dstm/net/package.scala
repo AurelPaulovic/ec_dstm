@@ -1,6 +1,8 @@
 package com.aurelpaulovic.fiit.ec_dstm
 
 import org.zeromq.ZMQ.Context
+import scala.pickling._
+import json._
 
 package object net {
 	implicit def context2RichContext(c: Context) = new RichContext(c)

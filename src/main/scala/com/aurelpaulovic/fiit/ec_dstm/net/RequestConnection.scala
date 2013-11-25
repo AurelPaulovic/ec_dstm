@@ -21,7 +21,7 @@ class RequestConnection (private val context: zmq.ZMQ.Context, private val addr:
 	    }
 	}
 	
-	def ask(msg: String): Option[String] = {
+	def ask(msg: String): Option[message.Message] = {
 	    if(connection != null) {
 	        connection.send(msg)
 	        
