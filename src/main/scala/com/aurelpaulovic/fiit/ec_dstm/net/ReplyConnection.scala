@@ -1,6 +1,5 @@
 package com.aurelpaulovic.fiit.ec_dstm.net
 
-import commands._
 import org.{ zeromq => zmq }
 import concurrent.future
 import concurrent.ExecutionContext.Implicits.global
@@ -8,13 +7,15 @@ import scala.concurrent.Future
 import scala.concurrent.Await
 import scala.concurrent.duration.Duration
 
-trait ReplyConnection {
+trait ReplyConnection extends Connection {
     protected val context: zmq.ZMQ.Context
     protected val addr: String
     
     private[this] val commanderAddr = "inproc://ecdstm.connection.commander." + context.getUniqueInprocSockId
     private[this] var commander: zmq.ZMQ.Socket = null
     private[this] var connectionWorker: Future[Boolean] = null
+    
+    def getAddr = addr
 
     protected def followerMessageResolve(msg: String): Boolean
     
