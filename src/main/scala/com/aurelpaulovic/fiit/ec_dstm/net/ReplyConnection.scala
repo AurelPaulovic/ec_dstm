@@ -22,14 +22,17 @@ trait ReplyConnection {
 
     def workerLoop(follower: zmq.ZMQ.Socket, gate: zmq.ZMQ.Socket) {
         val poller = new zmq.ZMQ.Poller(2)
-        poller.register(follower)
-        poller.register(gate)
+        
+        // !! has to specify register events mask or pool will not block and we will end up in a busy loop
+        poller.register(follower, zmq.ZMQ.Poller.POLLIN) 
+        poller.register(gate, zmq.ZMQ.Poller.POLLIN)
 
         var continue = true
         do {
             poller.poll()
 
             if (poller.pollin(0)) { // command
+                
                 var msg = follower.recvStr(defaultCharset)
                 continue = followerMessageResolve(msg)
             }
@@ -80,9 +83,10 @@ trait ReplyConnection {
 
     def stop {
         if (connectionWorker != null) {
-            commander.send("stop")
-
-            Await.ready(connectionWorker, Duration.Inf)
+            if(!connectionWorker.isCompleted) {
+            	commander.send("stop")
+            	Await.ready(connectionWorker, Duration.Inf)
+            }
 
             commander.close()
             commander = null
