@@ -3,7 +3,7 @@ package com.aurelpaulovic.fiit.ec_dstm
 import scala.collection.mutable
 
 class Node (private val id : Int) {
-  val connections: mutable.ListBuffer[net.Connection] = mutable.ListBuffer()
+  val connections: mutable.ListBuffer[net.ReplyConnection] = mutable.ListBuffer()
   
   override def toString() = {
     "Node " + id
