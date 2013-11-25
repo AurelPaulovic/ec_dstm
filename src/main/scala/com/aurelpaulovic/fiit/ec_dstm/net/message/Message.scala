@@ -20,6 +20,10 @@ case class DSGetRegisteredPublishers () extends Message
 
 case class DSRegisteredPublishers (publishers: Map[String, net.identity.Publisher]) extends Message
 
+case class SubRemPub(pub: net.identity.Publisher) extends Message
+
+case class SubAddPub(pub: net.identity.Publisher) extends Message
+
 object Message {
     implicit def message2String(m: Message): String = m.pickle.value
     

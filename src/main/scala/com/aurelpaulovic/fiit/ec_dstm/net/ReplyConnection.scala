@@ -84,7 +84,7 @@ trait ReplyConnection extends Connection {
     def stop {
         if (connectionWorker != null) {
             if(!connectionWorker.isCompleted) {
-            	commander.send("stop")
+            	commander.send(message.Stop())
             	Await.ready(connectionWorker, Duration.Inf)
             }
 

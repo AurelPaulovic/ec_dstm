@@ -5,7 +5,6 @@ import org.{ zeromq => zmq }
 class RequestConnection (private val context: zmq.ZMQ.Context, private val addr: String) extends Connection {
 	private var connection: zmq.ZMQ.Socket = null
     
-    
     def start {
         if(connection == null) {
 		    connection = context.socket(zmq.ZMQ.REQ)
