@@ -11,15 +11,14 @@ trait ReplyConnection extends Connection {
     protected val context: zmq.ZMQ.Context
     protected val addr: String
     
+    protected def followerMessageResolve(msg: message.Message): Boolean    
+    protected def gateMessageResolve(msg: message.Message): message.Message
+    
     private[this] val commanderAddr = "inproc://ecdstm.connection.commander." + context.getUniqueInprocSockId
     private[this] var commander: zmq.ZMQ.Socket = null
     private[this] var connectionWorker: Future[Boolean] = null
     
     def getAddr = addr
-
-    protected def followerMessageResolve(msg: message.Message): Boolean
-    
-    protected def gateMessageResolve(msg: message.Message): message.Message
 
     def workerLoop(follower: zmq.ZMQ.Socket, gate: zmq.ZMQ.Socket) {
         val poller = new zmq.ZMQ.Poller(2)
