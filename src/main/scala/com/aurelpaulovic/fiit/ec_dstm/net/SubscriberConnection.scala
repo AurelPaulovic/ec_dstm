@@ -27,58 +27,40 @@ class SubscriberConnection (protected val context: zmq.ZMQ.Context) extends Conn
         }
 	}
 	
-	def followerMessageResolve(msg: message.Message, follower: zmq.ZMQ.Socket): Boolean = msg match {
+	def followerMessageResolve(msg: message.Message, gate: zmq.ZMQ.Socket): Boolean = msg match {
 	    case message.Stop() => 
-            println("got stop command")
             false
 	    case message.SubAddPub(pub) =>
-	        println("got addPub command")
 	        SubscriberConnection.this.publishersMap.get(pub.name) match {
 	            case Some(current) if current.addr != pub.addr =>
-	                println("had another already")
-	                follower.disconnect(current.addr)
+	                gate.disconnect(current.addr)
 	                SubscriberConnection.this.publishersMap += (pub.name -> pub)
-	                follower.connect(pub.addr)
+	                gate.connect(pub.addr)
 	                true
 	            case None => 
-	                println("brand new")
 	                SubscriberConnection.this.publishersMap += (pub.name -> pub)
-	                follower.connect(pub.addr)
-	                follower.subscribe("".getBytes)
+	                gate.connect(pub.addr)
+	                gate.subscribe("".getBytes)
 	                true
 	            case Some(current) if current.addr == pub.addr =>
-	                println("already connected")
 	                true
 	        }
-	        
-	        println("current connected publishers: ")
-	        println(SubscriberConnection.this.publishersMap.mkString(","))
-	        println("---")
 	        
 	        true
 	    case message.SubRemPub(pub) =>
-	        println("got remPub command")
 	        SubscriberConnection.this.publishersMap.get(pub.name) match {
 	            case Some(current) if current.addr != pub.addr =>
-	                println("had different")
 	                true
 	            case None => 
-	                println("no such")
 	                true
 	            case Some(current) if current.addr == pub.addr =>
-	                println("disconnecting")
 	                SubscriberConnection.this.publishersMap.remove(pub.name)
-	                follower.disconnect(pub.addr)
+	                gate.disconnect(pub.addr)
 	                true
 	        }
 	        
-	        println("current connected publishers: ")
-	        println(SubscriberConnection.this.publishersMap.mkString(","))
-	        println("---")
-	        
 	        true
         case _ => {
-            println("got unsupported command: $msg")
             true
         }
 	} 
@@ -97,7 +79,7 @@ class SubscriberConnection (protected val context: zmq.ZMQ.Context) extends Conn
             if (poller.pollin(0)) { // command
                 
                 var msg = follower.recvStr(defaultCharset)
-                continue = followerMessageResolve(msg, follower)
+                continue = followerMessageResolve(msg, gate)
             }
 
             if (poller.pollin(1)) { // gate
