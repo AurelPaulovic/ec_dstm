@@ -8,6 +8,8 @@ sealed abstract class Message
 
 case class ACK () extends Message
 
+case class REJECT () extends Message
+
 case class Stop () extends Message
 
 case class InvalidMessage (msg: String) extends Message
@@ -15,6 +17,8 @@ case class InvalidMessage (msg: String) extends Message
 case class UnsupportedMessage (msg: Message) extends Message
 
 case class DSRegisterMessage (what: net.identity.Identity) extends Message
+
+case class DSUnregisterMessage (what: net.identity.Identity) extends Message
 
 case class DSGetRegisteredPublishers () extends Message
 

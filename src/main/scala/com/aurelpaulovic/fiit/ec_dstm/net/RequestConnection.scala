@@ -24,7 +24,8 @@ class RequestConnection (private val context: zmq.ZMQ.Context, private val addr:
 	    if(connection != null) {
 	        connection.send(msg)
 	        
-	        return Some(connection.recvStr(defaultCharset))
+	        var str = connection.recvStr(defaultCharset)
+	        return Some(str)
 	    }
 	    
 	    None

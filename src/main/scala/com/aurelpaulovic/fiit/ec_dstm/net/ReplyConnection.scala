@@ -66,17 +66,18 @@ trait ReplyConnection extends Connection {
 
 		            follower.unbind(commanderAddr)
 		            gate.unbind(addr)
+		            
+		            true
 		        } catch {
 		            case e: zmq.ZMQException if 
-		            	zmq.ZMQ.Error.findByCode(e.getErrorCode) == zmq.ZMQ.Error.EADDRINUSE => 
+		            	zmq.ZMQ.Error.findByCode(e.getErrorCode) == zmq.ZMQ.Error.EADDRINUSE => {
 		            	    println(s"Socket address '$addr' is already in use")
-		            	    return
+		            	    false
+		            	}
 		        } finally {
 		            follower.close()
 		            gate.close()
 		        }
-
-            	true
             }
         }
     }
