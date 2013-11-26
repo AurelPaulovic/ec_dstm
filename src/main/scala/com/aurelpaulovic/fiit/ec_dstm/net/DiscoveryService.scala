@@ -22,10 +22,10 @@ class DiscoveryService (private val name: String)  {
     }
     
     protected def gateMessageResolve(msg: message.Message): message.Message = msg match {
-        case message.DSRegisterMessage(publisher @ identity.Publisher(name, _)) =>
+        case message.DSRegisterIdentity(publisher @ identity.Publisher(name, _)) =>
             publishersMap += (name -> publisher)
             message.ACK()
-        case message.DSUnregisterMessage(publisher @ identity.Publisher(name, addr)) =>
+        case message.DSUnregisterIdentity(publisher @ identity.Publisher(name, addr)) =>
             publishersMap.get(name) match {
                 case Some(identity.Publisher(`name`, `addr`)) =>
                     publishersMap.remove(name)

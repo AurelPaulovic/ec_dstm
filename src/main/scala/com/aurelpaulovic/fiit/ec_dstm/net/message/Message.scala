@@ -4,29 +4,7 @@ import com.aurelpaulovic.fiit.ec_dstm.{net => net}
 import scala.pickling._
 import json._
 
-sealed abstract class Message
-
-case class ACK () extends Message
-
-case class REJECT () extends Message
-
-case class Stop () extends Message
-
-case class InvalidMessage (msg: String) extends Message
-
-case class UnsupportedMessage (msg: Message) extends Message
-
-case class DSRegisterMessage (what: net.identity.Identity) extends Message
-
-case class DSUnregisterMessage (what: net.identity.Identity) extends Message
-
-case class DSGetRegisteredPublishers () extends Message
-
-case class DSRegisteredPublishers (publishers: Map[String, net.identity.Publisher]) extends Message
-
-case class SubRemPub(pub: net.identity.Publisher) extends Message
-
-case class SubAddPub(pub: net.identity.Publisher) extends Message
+abstract class Message
 
 object Message {
     implicit def message2String(m: Message): String = m.pickle.value
