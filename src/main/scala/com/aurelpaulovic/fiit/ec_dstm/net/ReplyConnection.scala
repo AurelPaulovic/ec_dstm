@@ -14,7 +14,7 @@ trait ReplyConnection extends Connection {
     protected def followerMessageResolve(msg: message.Message): Boolean    
     protected def gateMessageResolve(msg: message.Message): message.Message
     
-    private[this] val commanderAddr = "inproc://ecdstm.connection.commander." + context.getUniqueInprocSockId
+    private[this] lazy val commanderAddr = "inproc://ecdstm.connection.commander." + context.getUniqueInprocSockId
     private[this] var commander: zmq.ZMQ.Socket = null
     private[this] var connectionWorker: Future[Boolean] = null
     
@@ -30,7 +30,7 @@ trait ReplyConnection extends Connection {
         var continue = true
         do {
             poller.poll()
-
+            
             if (poller.pollin(0)) { // command
                 
                 var msg = follower.recvStr(defaultCharset)
