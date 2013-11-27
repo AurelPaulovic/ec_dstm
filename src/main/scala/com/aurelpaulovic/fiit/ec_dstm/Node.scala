@@ -31,8 +31,9 @@ class Node (private val id : Int) {
           case Some(net.message.DSRegisteredPublishers(publishers)) =>
               for(remPub <- publishers
                   if remPub != pub.identity) {
-                  	println(this + ": listening to remote publisher " + remPub)
+            	  	println(this + ": connecting to remote publisher " + remPub)
             	  	sub.addPub(remPub)
+            	  	println(this + ": listening to remote publisher " + remPub)
               }
           case _ =>
               println(this + ": got some error 1")

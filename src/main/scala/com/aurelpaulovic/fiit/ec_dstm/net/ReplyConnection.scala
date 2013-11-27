@@ -2,7 +2,7 @@ package com.aurelpaulovic.fiit.ec_dstm.net
 
 import org.{ zeromq => zmq }
 import concurrent.future
-import concurrent.ExecutionContext.Implicits.global
+//import concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import scala.concurrent.Await
 import scala.concurrent.duration.Duration

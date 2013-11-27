@@ -2,8 +2,8 @@ package com.aurelpaulovic.fiit.ec_dstm.net
 
 import org.{ zeromq => zmq }
 import scala.collection.mutable
-import concurrent.future
-import concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.future
+//import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import scala.concurrent.Await
 import scala.concurrent.duration.Duration
@@ -77,7 +77,6 @@ class SubscriberConnection (protected val context: zmq.ZMQ.Context) extends Conn
             poller.poll()
 
             if (poller.pollin(0)) { // command
-                
                 var msg = follower.recvStr(defaultCharset)
                 continue = followerMessageResolve(msg, gate)
             }
