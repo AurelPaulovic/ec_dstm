@@ -36,7 +36,7 @@ class DiscoveryService (private val name: String)  {
                     message.ACK()
             }
         case message.DSGetRegisteredPublishers() =>
-            message.DSRegisteredPublishers(publishersMap.toMap)
+            message.DSRegisteredPublishers(publishersMap.values.toList)
         case _ => {
             message.UnsupportedMessage(msg)
         }
